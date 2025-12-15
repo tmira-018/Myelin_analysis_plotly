@@ -7,10 +7,13 @@ from dash.exceptions import PreventUpdate
 import numpy as np
 import os
 from skimage import io
+from flask import Flask
 
+server = Flask(__name__)
 
-app = Dash(__name__)
-
+app = Dash(__name__, 
+           server=server,
+           suppress_callback_exceptions= True)
 
 #--------------------------------------------------------------------------------
 # Plot function
@@ -41,13 +44,13 @@ def myelin_line_plot(df, column, range_y = [0, 50]):
     return single_cell_fig
 
 # Img directory
-img_dir = '/Users/miramota/Desktop/OL_analysis/Figure_5_images/'
+img_dir = 'Figure_5_images/'
 
 # --------------------------------------------------------------------------------------
 # Import data
 
 
-path = ('/Users/miramota/Desktop/OL_analysis/DataSheets/WIN_single_cell.xlsx')
+path = ('DataSheets/WIN_single_cell.xlsx')
 ol_df = pd.read_excel(path)
 
 ol_analysis= ol_df[ol_df['cell_ID'].map(ol_df['cell_ID'].value_counts()) > 1]
@@ -231,4 +234,4 @@ def update_graph_and_imgs(dmso_click, win_click):
 #--------------------------------------------------------------------------------------
 # Run the app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run_server(debug=True)
