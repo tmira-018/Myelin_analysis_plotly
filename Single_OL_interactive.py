@@ -1,18 +1,23 @@
 
 import pandas as pd
 import plotly.express as px
-from dash import Dash, dcc, html, Input, Output
 import numpy as np
 
+from flask import Flask
+from dash import Dash, dcc, html, Input, Output
 
-app = Dash(__name__)
+server = Flask(__name__)
+
+app = Dash(__name__, 
+           server=server,
+           suppress_callback_exceptions= True)
 
 # ------------------------------------------------------------------------------------
 # Import Data
 
 
 # Load data, this is the original dataframe with cell age 
-cellage_path = ('/OL_analysis/DataSheets/WIN_single_cell.xlsx')
+cellage_path = ('WIN_single_cell.xlsx')
 cellage_df = pd.read_excel(cellage_path)
 
 #--------------------------------------------------------------------------------------
@@ -62,7 +67,11 @@ def plot_metric(df, metric, option_selected, title):
                                             linewidth = 2),
                                 plot_bgcolor = 'white'
                                 )
+    
+        
         return fig
+
+
 #--------------------------------------------------------------------------------------
 
 # App Layout
@@ -118,7 +127,7 @@ def update_graph(option_selected):
 #--------------------------------------------------------------------------------------
 # Run the app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run_server(debug=True)
 
 # --------------------------------------------------------------------------------------
 
